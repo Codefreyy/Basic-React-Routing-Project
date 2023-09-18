@@ -12,7 +12,6 @@ function Post() {
   async function getUserName(userId) {
     const user = await getUser(userId)
     setUserName(user.name)
-    console.log(userName)
   }
   useEffect(() => {
     getUserName(post.userId)
