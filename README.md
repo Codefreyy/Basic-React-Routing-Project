@@ -8,7 +8,7 @@ The **api** folder contains the code for the **fake API**, while the **client** 
 
 ## How to run
 
-## Start the API
+### Start the API
 
 In order to start the API you need to run `npm run dev` inside the api folder (make sure you run `npm i` first to install the dependencies).
 
