@@ -4,13 +4,16 @@ import { getPosts } from "../api/posts"
 import { useEffect, useRef } from "react"
 
 function PostsList() {
-  const { posts, query, userId } = useLoaderData()
-  const queryRef = useRef("")
-  const authorRef = useRef(0)
+  const {
+    posts,
+    queryParams: { query, userId },
+  } = useLoaderData()
+  const queryRef = useRef()
+  const authorRef = useRef()
 
   useEffect(() => {
-    queryRef.value = query
-    authorRef.value = userId
+    queryRef.current.value = query || ""
+    authorRef.current.value = userId || ""
   }, [query, userId])
   return (
     <>
@@ -80,13 +83,17 @@ function PostsList() {
 
 const loader = async ({ request: { signal, url } }) => {
   const searchParams = new URL(url).searchParams
-  const query = searchParams.get("query") || ""
-  const userId = searchParams.get("userId") || 0
-  const posts = await getPosts({ signal, query, userId })
+  const query = searchParams.get("query")
+  const userId = searchParams.get("userId")
+  const filterParams = {
+    q: query,
+  }
+  if (userId !== "") filterParams.userId = userId
+
+  const posts = getPosts({ signal, params: filterParams })
   return {
-    posts,
-    query,
-    userId,
+    posts: await posts,
+    queryParams: { filterParams },
   }
 }
 
