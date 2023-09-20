@@ -1,7 +1,15 @@
 import { baseApi } from "./base"
 
 export function getPosts(options) {
-  return baseApi.get(`posts`, options).then((res) => res.data)
+  if (!options.userId) {
+    return baseApi
+      .get(`posts/?q=${options.query}`, options)
+      .then((res) => res.data)
+  } else {
+    return baseApi
+      .get(`posts/?q=${options.query}&userId=${options.userId}`, options)
+      .then((res) => res.data)
+  }
 }
 
 export async function getPost(options, postId) {
