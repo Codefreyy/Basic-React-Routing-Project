@@ -1,9 +1,18 @@
-import { Form, Link, redirect, useLoaderData } from "react-router-dom"
+import {
+  Form,
+  Link,
+  redirect,
+  useLoaderData,
+  useNavigation,
+} from "react-router-dom"
 import { createPost } from "../api/posts"
 import { getUsers } from "../api/users"
 
 export default function NewPost() {
   const users = useLoaderData()
+  const { state } = useNavigation()
+  const isSubmitting = state === "submitting"
+
   return (
     <>
       <Form method="post" action="/posts/new" className="form">
@@ -34,7 +43,9 @@ export default function NewPost() {
           <Link className="btn btn-outline" to="..">
             Cancel
           </Link>
-          <button className="btn">Save</button>
+          <button disabled={isSubmitting} className="btn">
+            {isSubmitting ? "Submitting" : "Save"}
+          </button>
         </div>
       </Form>
     </>

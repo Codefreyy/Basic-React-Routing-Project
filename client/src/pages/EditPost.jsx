@@ -1,4 +1,4 @@
-import { useLoaderData, redirect } from "react-router"
+import { useLoaderData, redirect, useNavigation } from "react-router"
 import { Form, Link } from "react-router-dom"
 import { getPost } from "../api/posts"
 import { getUsers } from "../api/users"
@@ -6,6 +6,8 @@ import { updatePost } from "../api/posts"
 
 function EditPost() {
   const { users, post } = useLoaderData()
+  const { state } = useNavigation()
+  const isSubmitting = state === "submitting"
   return (
     <div>
       <h1 className="page-title">Edit Post</h1>
@@ -41,7 +43,10 @@ function EditPost() {
           <Link className="btn btn-outline" to="..">
             Cancel
           </Link>
-          <button className="btn">Save</button>
+          <button className="btn" disabled={isSubmitting}>
+            {" "}
+            {isSubmitting ? "Submitting" : "Save"}
+          </button>
         </div>
       </Form>
     </div>
