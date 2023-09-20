@@ -17,9 +17,9 @@ function PostsList() {
       <h1 className="page-title">
         Posts
         <div className="title-btns">
-          <a className="btn btn-outline" href="/posts/new">
+          <Link className="btn btn-outline" to="/posts/new">
             New
-          </a>
+          </Link>
         </div>
       </h1>
       <Form method="get" action="/posts" className="form mb-4">

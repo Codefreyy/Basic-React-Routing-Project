@@ -19,3 +19,7 @@ export async function getPost(options, postId) {
 export function getUserPosts(options, userId) {
   return baseApi.get(`posts?userId=${userId}`, options).then((res) => res.data)
 }
+
+export function createPost(params) {
+  return baseApi.post("posts", params).then((res) => res.data)
+}
