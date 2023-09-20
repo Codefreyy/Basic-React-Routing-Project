@@ -1,7 +1,9 @@
 import { baseApi } from "./base"
 
 export const getTodos = (options) => {
-  return baseApi.get("todos", options).then((res) => res.data)
+  return baseApi
+    .get(`todos/?query=${options.query}`, options)
+    .then((res) => res.data)
 }
 
 export const getUserTodos = (options, userId) => {
