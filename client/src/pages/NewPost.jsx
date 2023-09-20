@@ -2,6 +2,7 @@ import {
   Form,
   Link,
   redirect,
+  useActionData,
   useLoaderData,
   useNavigation,
 } from "react-router-dom"
@@ -11,16 +12,20 @@ import { getUsers } from "../api/users"
 export default function NewPost() {
   const users = useLoaderData()
   const { state } = useNavigation()
+  const errors = useActionData()
   const isSubmitting = state === "submitting"
 
   return (
     <>
       <Form method="post" action="/posts/new" className="form">
         <div className="form-row">
-          <div className="form-group error">
+          <div className={`form-group ${errors?.title ? "error" : ""}`}>
             <label htmlFor="title">Title</label>
             <input type="text" name="title" id="title" />
-            <div className="error-message">Required</div>
+
+            {errors?.title != null && (
+              <div className="error-message">{errors.title}</div>
+            )}
           </div>
           <div className="form-group">
             <label htmlFor="userId">Author</label>
@@ -34,11 +39,15 @@ export default function NewPost() {
           </div>
         </div>
         <div className="form-row">
-          <div className="form-group">
+          <div className={`form-group ${errors?.body != null ? "error" : ""}`}>
             <label htmlFor="body">Body</label>
             <textarea name="body" id="body"></textarea>
+            {errors?.body != null && (
+              <div className="error-message">{errors.body}</div>
+            )}
           </div>
         </div>
+
         <div className="form-row form-btn-row">
           <Link className="btn btn-outline" to="..">
             Cancel
@@ -57,6 +66,12 @@ const action = async ({ request }) => {
   const title = formData.get("title")
   const userId = formData.get("userId")
   const body = formData.get("body")
+
+  // fields validations
+  const errors = postFormValidator({ title, body, userId })
+  if (Object.keys(errors).length > 0) {
+    return errors
+  }
   const post = await createPost(
     { title, body, userId },
     { signal: request.signal }
@@ -71,4 +86,22 @@ export const newPostRoute = {
   action,
   loader,
   element: <NewPost />,
+}
+
+export function postFormValidator({ title, body, userId }) {
+  const errors = {}
+
+  if (title === "") {
+    errors.title = "Title is required"
+  }
+
+  if (body === "") {
+    errors.body = "Body is required"
+  }
+
+  if (userId === "") {
+    errors.userId = "User is required"
+  }
+
+  return errors
 }
